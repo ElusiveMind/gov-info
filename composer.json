@@ -1,13 +1,13 @@
 {
-    "name": "cnizzardini/gov-info",
-    "description": "Library for using api.govinfo.gov",
+    "name": "mbagnall/gov-info",
+    "description": "A fork for a library for using api.govinfo.gov. Compatible with Drupal 9 until it can use console 5",
     "keywords": [
         "gov",
         "govinfo",
         "govinfo.gov",
         "api.govinfo.gov"
     ],
-    "homepage": "https://github.com/cnizzardini/gov-info",
+    "homepage": "https://github.com/ElusiveMind/gov-info",
     "license": "MIT",
     "authors": [
         {
@@ -19,8 +19,7 @@
     "require": {
         "php" : "^7.2",
         "ext-json": "*",
-        "guzzlehttp/guzzle": "~6.0",
-        "symfony/console": "^5.0"
+        "guzzlehttp/guzzle": "~6.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.4"
