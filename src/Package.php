@@ -110,10 +110,28 @@ final class Package
         return $this->objApi->getArray($objUri->withPath($strPath));
     }
 
+    private function granuleDownload(PackageAbstractRequestor $objRequestor) : array {
+      $this->requireStrPackageId($objRequestor);
+      $this->requireDownloadType($objRequestor);
+
+      $objUri = new Uri();
+      $strPath = self::ENDPOINT . '/' . $objRequestor->getStrPackageId() . '/granules/';
+      $strPath.= $objRequestor->getStrGranuleId() . '/' . $objRequestor->getDownloadType;
+
+      return $this->objApi->getArray($objUri->withPath($strPath));
+    }
+
+
+    private function requireDownloadType(PackageAbstractRequestor $objRequestor) : void {
+      if (empty($objRequestor->getDownloadType())) {
+        throw new \LogicException('PackageRequestor::getDownloadType is required');
+      }
+    }
+
     private function requireStrPackageId(PackageAbstractRequestor $objRequestor) : void
     {
-        if (empty($objRequestor->getStrPackageId())) {
-            throw new \LogicException('PackageRequestor::getStrPackageId is required');
-        }
+      if (empty($objRequestor->getStrPackageId())) {
+        throw new \LogicException('PackageRequestor::getStrPackageId is required');
+      }
     }
 }

@@ -10,34 +10,44 @@ final class PackageAbstractRequestor extends AbstractRequestor
 
     public function setStrPackageId(string $strPackageId) : self
     {
-        $this->strPackageId = $strPackageId;
-        return $this;
+      $this->strPackageId = $strPackageId;
+      return $this;
     }
 
     public function setStrGranuleId(string $strGranuleId) : self
     {
-        $this->strGranuleId = $strGranuleId;
-        return $this;
+      $this->strGranuleId = $strGranuleId;
+      return $this;
     }
 
     public function setStrContentType(string $strContentType) : self
     {
-        $this->strContentType = $strContentType;
-        return $this;
+      $this->strContentType = $strContentType;
+      return $this;
     }
 
+    public function setDownloadType(string $strDownloadType) : self {
+      $this->strDownloadType = $strDownloadType;
+      return $this;
+    }
+    
     public function getStrPackageId() : string
     {
-        return $this->strPackageId;
+      return $this->strPackageId;
     }
 
     public function getStrGranuleId() : string
     {
-        return $this->strGranuleId;
+      return $this->strGranuleId;
     }
 
     public function getStrContentType() : string
     {
-        return $this->strContentType;
+      return $this->strContentType;
     } 
+
+    public function getDownloadType() : string {
+      return $this->strDownloadType;
+    }
+
 }
