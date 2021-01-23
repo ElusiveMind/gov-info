@@ -9,129 +9,127 @@ use LogicException;
 
 final class Package
 {
-    use EndpointTrait;
+  use EndpointTrait;
 
-    private const ENDPOINT = 'packages';
-    
-    /**
-     * Constructs an instance
-     * 
-     * @param Api $objApi
-     */
-    public function __construct(Api $objApi)
-    {
-        $this->objApi = $objApi;
-    }
-    
-    /**
-     * Gets package summary
-     * 
-     * @param PackageAbstractRequestor $objRequestor
-     * @return array
-     */
-    public function summary(PackageAbstractRequestor $objRequestor) : array
-    {
-        $this->requireStrPackageId($objRequestor);
-        
-        $objUri = new Uri();
-        $objUri = $objUri->withQueryValue($objUri, 'pageSize', $objRequestor->getIntPageSize());
-        $objUri = $objUri->withQueryValue($objUri, 'offset', $objRequestor->getIntOffSet());
-        
-        $strPath = self::ENDPOINT . '/' . $objRequestor->getStrPackageId() . '/summary';
-        
-        return $this->objApi->getArray($objUri->withPath($strPath));
-    }
-    
-    /**
-     * Gets a package of a specified content type
-     * 
-     * @param PackageAbstractRequestor $objRequestor
-     * @return Response
-     * @throws LogicException
-     */
-    public function contentType(PackageAbstractRequestor $objRequestor) : Response
-    {
-        $this->requireStrPackageId($objRequestor);
-        
-        if (empty($objRequestor->getStrContentType())) {
-            throw new \LogicException('PackageRequestor::getStrContentType is required');
-        }
-        
-        $objUri = new Uri();
-        
-        $strPath = self::ENDPOINT . '/' . $objRequestor->getStrPackageId() . '/';
-        $strPath.= $objRequestor->getStrContentType();
-        
-        return $this->objApi->get($objUri->withPath($strPath));
-    }
-    
-    /**
-     * Gets a packages granules
-     * 
-     * @param PackageAbstractRequestor $objRequestor
-     * @return array
-     * @throws LogicException
-     */
-    public function granules(PackageAbstractRequestor $objRequestor) : array
-    {
-        $this->requireStrPackageId($objRequestor);
-        
-        $objUri = new Uri();
-        $objUri = $objUri->withQueryValue($objUri, 'pageSize', $objRequestor->getIntPageSize());
-        $objUri = $objUri->withQueryValue($objUri, 'offset', $objRequestor->getIntOffSet());
-        
-        $strPath = self::ENDPOINT . '/' . $objRequestor->getStrPackageId() . '/granules';
+  private const ENDPOINT = 'packages';
 
-        return $this->objApi->getArray($objUri->withPath($strPath));
-    }
-    
-    /**
-     * Get granule summary
-     * 
-     * @param PackageAbstractRequestor $objRequestor
-     * @return array
-     * @throws LogicException
-     */
-    public function granuleSummary(PackageAbstractRequestor $objRequestor) : array
-    {
-        $this->requireStrPackageId($objRequestor);
-        
-        if (empty($objRequestor->getStrGranuleId())) {
-            throw new \LogicException('PackageRequestor::strGranuleId is required');
-        }
-        
-        $objUri = new Uri();
-        $objUri = $objUri->withQueryValue($objUri, 'pageSize', $objRequestor->getIntPageSize());
-        $objUri = $objUri->withQueryValue($objUri, 'offset', $objRequestor->getIntOffSet());
-        
-        $strPath = self::ENDPOINT . '/' . $objRequestor->getStrPackageId() . '/granules/';
-        $strPath.= $objRequestor->getStrGranuleId() . '/summary';
-        
-        return $this->objApi->getArray($objUri->withPath($strPath));
+  /**
+   * Constructs an instance
+   *
+   * @param Api $objApi
+   */
+  public function __construct(Api $objApi)
+  {
+      $this->objApi = $objApi;
+  }
+
+  /**
+   * Gets package summary
+   *
+   * @param PackageAbstractRequestor $objRequestor
+   * @return array
+   */
+  public function summary(PackageAbstractRequestor $objRequestor) : array
+  {
+    $this->requireStrPackageId($objRequestor);
+
+    $objUri = new Uri();
+    $objUri = $objUri->withQueryValue($objUri, 'pageSize', $objRequestor->getIntPageSize());
+    $objUri = $objUri->withQueryValue($objUri, 'offset', $objRequestor->getIntOffSet());
+
+    $strPath = self::ENDPOINT . '/' . $objRequestor->getStrPackageId() . '/summary';
+
+    return $this->objApi->getArray($objUri->withPath($strPath));
+  }
+
+  /**
+   * Gets a package of a specified content type
+   *
+   * @param PackageAbstractRequestor $objRequestor
+   * @return Response
+   * @throws LogicException
+   */
+  public function contentType(PackageAbstractRequestor $objRequestor) : Response
+  {
+    $this->requireStrPackageId($objRequestor);
+
+    if (empty($objRequestor->getStrContentType())) {
+        throw new \LogicException('PackageRequestor::getStrContentType is required');
     }
 
-    private function granuleDownload(PackageAbstractRequestor $objRequestor) : array {
-      $this->requireStrPackageId($objRequestor);
-      $this->requireDownloadType($objRequestor);
+    $objUri = new Uri();
 
-      $objUri = new Uri();
-      $strPath = self::ENDPOINT . '/' . $objRequestor->getStrPackageId() . '/granules/';
-      $strPath.= $objRequestor->getStrGranuleId() . '/' . $objRequestor->getDownloadType;
+    $strPath = self::ENDPOINT . '/' . $objRequestor->getStrPackageId() . '/';
+    $strPath.= $objRequestor->getStrContentType();
 
-      return $this->objApi->getArray($objUri->withPath($strPath));
+    return $this->objApi->get($objUri->withPath($strPath));
+  }
+
+  /**
+   * Gets a packages granules
+   *
+   * @param PackageAbstractRequestor $objRequestor
+   * @return array
+   * @throws LogicException
+   */
+  public function granules(PackageAbstractRequestor $objRequestor) : array
+  {
+    $this->requireStrPackageId($objRequestor);
+
+    $objUri = new Uri();
+    $objUri = $objUri->withQueryValue($objUri, 'pageSize', $objRequestor->getIntPageSize());
+    $objUri = $objUri->withQueryValue($objUri, 'offset', $objRequestor->getIntOffSet());
+
+    $strPath = self::ENDPOINT . '/' . $objRequestor->getStrPackageId() . '/granules';
+
+    return $this->objApi->getArray($objUri->withPath($strPath));
+  }
+
+  /**
+   * Get granule summary
+   *
+   * @param PackageAbstractRequestor $objRequestor
+   * @return array
+   * @throws LogicException
+   */
+  public function granuleSummary(PackageAbstractRequestor $objRequestor) : array
+  {
+    $this->requireStrPackageId($objRequestor);
+
+    if (empty($objRequestor->getStrGranuleId())) {
+      throw new \LogicException('PackageRequestor::strGranuleId is required');
     }
 
+    $objUri = new Uri();
+    $objUri = $objUri->withQueryValue($objUri, 'pageSize', $objRequestor->getIntPageSize());
+    $objUri = $objUri->withQueryValue($objUri, 'offset', $objRequestor->getIntOffSet());
 
-    private function requireDownloadType(PackageAbstractRequestor $objRequestor) : void {
-      if (empty($objRequestor->getDownloadType())) {
-        throw new \LogicException('PackageRequestor::getDownloadType is required');
-      }
-    }
+    $strPath = self::ENDPOINT . '/' . $objRequestor->getStrPackageId() . '/granules/';
+    $strPath.= $objRequestor->getStrGranuleId() . '/summary';
 
-    private function requireStrPackageId(PackageAbstractRequestor $objRequestor) : void
-    {
-      if (empty($objRequestor->getStrPackageId())) {
-        throw new \LogicException('PackageRequestor::getStrPackageId is required');
-      }
+    return $this->objApi->getArray($objUri->withPath($strPath));
+  }
+
+  public function summaryDownload(PackageAbstractRequestor $objRequestor) : string {
+    $this->requireStrPackageId($objRequestor);
+    $this->requireDownloadType($objRequestor);
+
+    $objUri = new Uri();
+    $strPath = self::ENDPOINT . '/' . $objRequestor->getStrPackageId() . '/' . $objRequestor->getDownloadType();
+
+    return $this->objApi->getData($objUri->withPath($strPath));
+  }
+
+  private function requireDownloadType(PackageAbstractRequestor $objRequestor) : void {
+    if (empty($objRequestor->getDownloadType())) {
+      throw new \LogicException('PackageRequestor::getDownloadType is required');
     }
+  }
+
+  private function requireStrPackageId(PackageAbstractRequestor $objRequestor) : void
+  {
+    if (empty($objRequestor->getStrPackageId())) {
+      throw new \LogicException('PackageRequestor::getStrPackageId is required');
+    }
+  }
 }

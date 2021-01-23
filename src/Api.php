@@ -13,7 +13,7 @@ final class Api
     private $objHttp;
     private $strApiKey;
     private $objUri;
-    
+
     /**
      * Construct an instance
      * 
@@ -22,10 +22,10 @@ final class Api
      */
     public function __construct(Client $objHttp, string $strApiKey = '')
     {
-        $this->objHttp = $objHttp;
-        $this->strApiKey = $strApiKey;
+      $this->objHttp = $objHttp;
+      $this->strApiKey = $strApiKey;
     }
-    
+
     /**
      * HTTP GET
      * 
@@ -34,21 +34,29 @@ final class Api
      */
     public function get(Uri $objUri) : ResponseInterface
     {
-        if (empty($objUri->getPath())) {
-            throw new LogicException('Uri must contain a valid path');
-        }
+      if (empty($objUri->getPath())) {
+          throw new LogicException('Uri must contain a valid path');
+      }
 
-        if (empty($this->strApiKey)) {
-            throw new LogicException('Api Key is required');
-        }
+      if (empty($this->strApiKey)) {
+          throw new LogicException('Api Key is required');
+      }
 
-        $objUri = $objUri->withHost(self::URL)->withScheme('https');
-        $objUri = $objUri->withQueryValue($objUri, 'api_key', $this->strApiKey);
-        $this->objUri =$objUri;
+      $objUri = $objUri->withHost(self::URL)->withScheme('https');
+      $objUri = $objUri->withQueryValue($objUri, 'api_key', $this->strApiKey);
+      $this->objUri =$objUri;
 
-        return $this->objHttp->get($this->objUri);
+      return $this->objHttp->get($this->objUri);
     }
-    
+
+    public function getData(Uri $objUri) : string {
+      $objResponse = $this->get($objUri);
+      $contentLength = $objResponse->getHeader('Content-Length');
+      $body = $objResponse->getBody();
+      $body->seek(0);
+      return $body->read($contentLength[0]);
+    }
+
     /**
      * Performs HTTP GET and returns as an object
      * 
@@ -57,28 +65,28 @@ final class Api
      */
     public function getArray(Uri $objUri) : array
     {
-        $objResponse = $this->get($objUri);
-        return json_decode($objResponse->getBody()->getContents(), true);
+      $objResponse = $this->get($objUri);
+      return json_decode($objResponse->getBody()->getContents(), true);
     }
 
     public function getObjHttp() : Client
     {
-        return $this->objHttp;
+      return $this->objHttp;
     }
 
     public function setStrApiKey(string $key) : self
     {
-        $this->strApiKey = $key;
-        return $this;
+      $this->strApiKey = $key;
+      return $this;
     }
 
     public function getStrApiKey() : string
     {
-        return $this->strApiKey;
+      return $this->strApiKey;
     }
 
     public function getObjUri() : Uri
     {
-        return $this->objUri;
+      return $this->objUri;
     }
 }
