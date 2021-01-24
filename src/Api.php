@@ -14,6 +14,12 @@ final class Api
     private $strApiKey;
     private $objUri;
 
+    // We want to keep track on the number of requests we have left.
+    public $rateLimitRemaining;
+
+    // Keep track of the number of requests we have in total.
+    public $rateLimit;
+
     /**
      * Construct an instance
      * 
@@ -24,6 +30,8 @@ final class Api
     {
       $this->objHttp = $objHttp;
       $this->strApiKey = $strApiKey;
+      $this->rateLimitRemaining = NULL;
+      $this->rateLimit = NULL;
     }
 
     /**
@@ -34,27 +42,34 @@ final class Api
      */
     public function get(Uri $objUri) : ResponseInterface
     {
-      if (empty($objUri->getPath())) {
-          throw new LogicException('Uri must contain a valid path');
-      }
+        if (empty($objUri->getPath())) {
+            throw new LogicException('Uri must contain a valid path');
+        }
 
-      if (empty($this->strApiKey)) {
-          throw new LogicException('Api Key is required');
-      }
+        if (empty($this->strApiKey)) {
+            throw new LogicException('Api Key is required');
+        }
 
-      $objUri = $objUri->withHost(self::URL)->withScheme('https');
-      $objUri = $objUri->withQueryValue($objUri, 'api_key', $this->strApiKey);
-      $this->objUri =$objUri;
+        $objUri = $objUri->withHost(self::URL)->withScheme('https');
+        $objUri = $objUri->withQueryValue($objUri, 'api_key', $this->strApiKey);
+        $this->objUri =$objUri;
 
-      return $this->objHttp->get($this->objUri);
+        $objResponse = $this->objHttp->get($this->objUri);
+        $rateLimitRemaining = $objResponse->getHeader('X-RateLimit-Remaining');
+        $rateLimit = $objResponse->getHeader('X-RateLimit-Limit');
+
+        $this->rateLimitRemaining = $rateLimitRemaining[0];
+        $this->rateLimit = $rateLimit[0];
+
+        return $objResponse;
     }
 
     public function getData(Uri $objUri) : string {
-      $objResponse = $this->get($objUri);
-      $contentLength = $objResponse->getHeader('Content-Length');
-      $body = $objResponse->getBody();
-      $body->seek(0);
-      return $body->read($contentLength[0]);
+        $objResponse = $this->get($objUri);
+        $contentLength = $objResponse->getHeader('Content-Length');
+        $body = $objResponse->getBody();
+        $body->seek(0);
+        return $body->read($contentLength[0]);
     }
 
     /**
@@ -65,28 +80,28 @@ final class Api
      */
     public function getArray(Uri $objUri) : array
     {
-      $objResponse = $this->get($objUri);
-      return json_decode($objResponse->getBody()->getContents(), true);
+        $objResponse = $this->get($objUri);
+        return json_decode($objResponse->getBody()->getContents(), true);
     }
 
     public function getObjHttp() : Client
     {
-      return $this->objHttp;
+        return $this->objHttp;
     }
 
     public function setStrApiKey(string $key) : self
     {
-      $this->strApiKey = $key;
-      return $this;
+        $this->strApiKey = $key;
+        return $this;
     }
 
     public function getStrApiKey() : string
     {
-      return $this->strApiKey;
+        return $this->strApiKey;
     }
 
     public function getObjUri() : Uri
     {
-      return $this->objUri;
+        return $this->objUri;
     }
 }
