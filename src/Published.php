@@ -23,17 +23,6 @@ final class Published
   }
 
   /**
-   * Returns collections available
-   * 
-   * @return array
-   */
-  public function index() : array
-  {
-    $objUri = new Uri();
-    return $this->objApi->getArray($objUri->withPath(self::ENDPOINT));
-  }
-
-  /**
    * Returns a type of published
    *
    * @param PublishedAbstractRequestor $objRequestor
@@ -46,8 +35,6 @@ final class Published
     if (empty($objRequestor->getStrCollectionCode())) {
       throw new LogicException('PublishedRequestor::strCollectionCode is required');
     }
-
-    // https://api.govinfo.gov/published/2020-06-17/2020-06-18?offset=0&pageSize=100&collection=USCOURTS&api_key=MYgIbngFfG80kYvGsX9YMNC7dC88Fs487Cp7Hn8g
 
     $objUri = new Uri();
     $objUri = $objUri->withQueryValue($objUri, 'pageSize', $objRequestor->getIntPageSize());
