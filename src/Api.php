@@ -58,8 +58,12 @@ final class Api
         $rateLimitRemaining = $objResponse->getHeader('X-RateLimit-Remaining');
         $rateLimit = $objResponse->getHeader('X-RateLimit-Limit');
 
-        $this->rateLimitRemaining = $rateLimitRemaining[0];
-        $this->rateLimit = $rateLimit[0];
+        if (!empty($rateLimitRemaining)) {
+          $this->rateLimitRemaining = $rateLimitRemaining[0];
+        }
+        if (!empty($rateLimit)) {
+          $this->rateLimit = $rateLimit[0];
+        }
 
         return $objResponse;
     }
