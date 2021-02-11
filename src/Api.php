@@ -58,11 +58,9 @@ final class Api
         $rateLimitRemaining = $objResponse->getHeader('X-RateLimit-Remaining');
         $rateLimit = $objResponse->getHeader('X-RateLimit-Limit');
 
-        if (!empty($rateLimitRemaining)) {
-          $this->rateLimitRemaining = $rateLimitRemaining[0];
-        }
-        if (!empty($rateLimit)) {
-          $this->rateLimit = $rateLimit[0];
+        if (!empty($rateLimit[0]) && (!empty($rateLimitRemaining[0]))) {
+          $this->setRateLimit($rateLimit[0]);
+          $this->setRateLimitRemaining($rateLimitRemaining[0]);
         }
 
         return $objResponse;
@@ -107,5 +105,27 @@ final class Api
     public function getObjUri() : Uri
     {
         return $this->objUri;
+    }
+
+    public function setRateLimit($rateLimit) : self
+    {
+        $this->rateLimit = $rateLimit;
+        return $this;
+    }
+
+    public function getRateLimit() : int
+    {
+        return (int) $this->rateLimit;
+    }
+
+    public function setRateLimitRemaining($rateLimitRemaining) : self
+    {
+        $this->rateLimitRemaining = $rateLimitRemaining;
+        return $this;
+    }
+
+    public function getRateLimitRemaining() : int
+    {
+        return (int) $this->rateLimitRemaining;
     }
 }
